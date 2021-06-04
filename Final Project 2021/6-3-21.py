@@ -82,10 +82,10 @@ pygame.display.set_caption("Ludo Game")          #set window title
 BLACK    = (   0,   0,   0)                             #Color Constants 
 WHITE    = ( 255, 255, 255)
 GREEN    = (   0, 255,   0)
-RED      = ( 255,   0,   0)
+RED      = ( 165, 29, 29)
 BLUE     = (   0,   0, 255)
 GREY     = (193, 193, 193)
-YELLOW   = (255, 229, 0)
+YELLOW   = (255, 153, 51)
 DKGREY   = (132, 131, 131)
 
 #other global variables (WARNING: use sparingly):
@@ -121,6 +121,8 @@ yEnd = []
 bEnd = []
 rEnd = []
 
+#gameOver
+gameOver = False
 
 
 
@@ -148,7 +150,7 @@ the beginning screen before playing with the title and 'click to play'
 -uses mouse clicks 
 '''
 
-def startScreen(gameInPlay, pickPlayer, diceValue,board,currentTurn, gameOver):
+def startScreen(gameInPlay, pickPlayer, diceValue,board,currentTurn):
     for wall in borders:
         pygame.draw.rect(surface, GREY, wall)
    
@@ -164,7 +166,7 @@ def startScreen(gameInPlay, pickPlayer, diceValue,board,currentTurn, gameOver):
         
         surface.fill(WHITE)
         gameInPlay == True
-        drawScreen(diceValue,board,currentTurn, gameOver)
+        drawScreen(diceValue,board,currentTurn)
 
     return gameInPlay
         
@@ -216,7 +218,7 @@ def showMessage(words, size, font, x, y, color, bg = None):
 displays all elements on the screen:
 -background, borders, startMessage, dice implementations, currentTurn, 
 '''
-def drawScreen(diceValue,board,currentTurn, gameOver):
+def drawScreen(diceValue,board,currentTurn):
     #background
     background = pygame.image.load('background.jpg')
     surface.blit(background, [45,26])
@@ -250,17 +252,17 @@ def drawScreen(diceValue,board,currentTurn, gameOver):
     if gameOver == True:
         if len(gEnd) == 4:
             showMessage("GREEN WON!", 50, "Consolas", w/2, h/2, GREEN)
-        if len(yEnd) == 4:
+        elif len(yEnd) == 4:
             showMessage("YELLOW WON!", 50, "Consolas", w/2, h/2, YELLOW)
-        if len(bEnd) == 4:
+        elif len(bEnd) == 4:
             showMessage("BLUE WON", 50, "Consolas", w/2, h/2, BLUE)
-        if len(rEnd) == 4:
+        elif len(rEnd) == 4:
             showMessage("RED WON", 50, "Consolas", w/2, h/2, RED)                                  
           
     blitDice(diceValue) 
     
     currentTurnMessage = players[currentTurn]+"\'s Turn"
-    showMessage(currentTurnMessage, 40, "Consolas", w/2, h-45, DKGREY)
+    showMessage(currentTurnMessage, 40, "Consolas", w/2, h-45, GREY)
     showMessage(currentTurnMessage, 40, "Consolas", (w/2)-5, h-43,DKGREY )   #casts a shadow effect     
 
 '''
@@ -289,7 +291,7 @@ gets the dice value from rollDice and moves the piece
 -when mouse is clicked on player, it directly goes to the first colored space out 
 -player can only move if 6 is rolled 
 '''    
-def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, gameOver):
+def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol):
     
     #first play...pieces are still home 
     if [pieceRow,pieceCol] in homePositions:
@@ -349,6 +351,8 @@ def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, 
                     gIndex = greenPath.index([pieceRow, pieceCol])
                     
                     newGreenPos = gIndex + diceValue
+                    if newGreenPos > len(greenPath):
+                        newGreenPos = len(greenPath) -1
                     
                     coordx = greenPath[newGreenPos][0]
                     coordy = greenPath[newGreenPos][1]
@@ -368,9 +372,12 @@ def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, 
                         
                     if [coordx, coordy] == greenPath[-1]:
                         gEnd.append(True) 
+                        print("in movePiece %d" % len(gEnd))
                         
                         if len(gEnd) == 4:
                             gameOver = True 
+                            print("in movePiece %s" % gameOver)
+                            
                         
             
                 
@@ -383,8 +390,13 @@ def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, 
                     
                     newYellowPos = yIndex + diceValue
                     
+ 
+                    if newYellowPos > len(yellowPath):
+                        newYellowPos = len(yellowPath) -1                      
+                    
                     coordx = yellowPath[newYellowPos][0]
                     coordy = yellowPath[newYellowPos][1]
+                                     
                     
                     print(coordx, coordy)
                
@@ -416,8 +428,14 @@ def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, 
                     
                     newBluePos = bIndex + diceValue
                     
+                    if newBluePos > len(bluePath):
+                                       
+                        newBluePos = len(bluePath) -1                      
+                    
                     coordx = bluePath[newBluePos][0]
                     coordy = bluePath[newBluePos][1]
+                    
+                                 
                     
                     print(coordx, coordy)
                     
@@ -447,6 +465,10 @@ def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, 
                     rIndex = redPath.index([pieceRow, pieceCol])
                     
                     newRedPos = rIndex + diceValue
+                    
+ 
+                    if newRedPos > len(redPath):
+                        newRedPos = len(redPath) -1                      
                     
                     coordx = redPath[newRedPos][0]
                     coordy = redPath[newRedPos][1]
@@ -538,7 +560,7 @@ def main():                                             #every program should ha
                         
                         pass
                     else:
-                        movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, gameOver)
+                        movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol)
                     
                     
                    
@@ -553,16 +575,19 @@ def main():                                             #every program should ha
                         
                         
                         #so it works only when mouse collides with dice and NOT the gameboard 
-                        diceValue = random.randint(5,6)
+                        diceValue = random.randint(1,6) #for testing sake 
+                        if (pieceRow, pieceCol) == (15, 0):
+
+                            pass                        
                         
-                        
-                        
-                        currentTurn = movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, gameOver) 
+                        else:
+                            currentTurn = movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol) 
                         
                 #reset
                 if gameOver == True:
-                    board = orgBoard
-    
+                    diceRoll = False
+                    print("gameOver")
+            
         
         # ongoing game logic that occurs ever 1/60 second goes @ this indentation level
         
@@ -570,7 +595,7 @@ def main():                                             #every program should ha
         
         
         surface.fill(WHITE)  #set background color
-        startScreen(gameInPlay,gameBoard, diceValue,board,currentTurn, gameOver)
+        startScreen(gameInPlay,gameBoard, diceValue,board,currentTurn)
         
         
         
