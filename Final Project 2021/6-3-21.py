@@ -246,8 +246,8 @@ def drawScreen(diceValue,board,currentTurn):
             x+=sw
         y+=sw
     
-    if diceValue == 6:
-        showMessage("Roll Again!", 20, "Consolas", w-70, h-30, RED)
+    #if diceValue == 6:
+        #showMessage("Roll Again!", 20, "Consolas", w-70, h-30, RED)
         
     blitDice(diceValue) 
     #currentTurn+=1
@@ -283,24 +283,20 @@ gets the dice value from rollDice and moves the piece
 -player can only move if 6 is rolled 
 '''    
 def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, gameOver):
+    #first play...pieces are still home 
+    if [pieceRow,pieceCol] in homePositions:
+        firstTime = True
+    else:       #not first time, move player regularly 
+        firstTime = False
     
-    
-    if diceValue == 6:
+    if diceValue == 6:      #dice needs to be 6 to get out 
         if [pieceRow,pieceCol] in homePositions:
-        
-            homePositions.remove([pieceRow, pieceCol])
-            #print(len(homePositions))
             
+            #clicked piece is at the first base location of path
             
-            #have to do differently for each player/color
-            #if player clicked, first position ([6,1]) has gp instead of g
-            #don't need to reblit anything because it blits itself in drawScreen()
-            
-            #print(currentTurn)
-        
             if currentTurn == 0:    #GREEN
                 
-                board[pieceRow][pieceCol] = "bg"
+                board[pieceRow][pieceCol] = "bg"        
                                 
                 board[6][1] = "gp"
                 
@@ -320,15 +316,59 @@ def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, 
                                     
                 board[pieceRow][pieceCol] = "br"
                                 
-                board[13][6] = "rp"                                                
-                
-         
+                board[13][6] = "rp"
+           
+            firstTime = True
+        else:
+            firstTime = False
+   
     
-         
-    else:
-        #newPos =
-        endGame(gameOver)
-        pass
+    if not firstTime:
+        
+        #user clicks on piece they want to move for path 
+        #capture position 
+        #check if green piece is at position 
+        #if yes, find index of coordinate and store in variable  
+        #index + diceValue (user will roll) = newPos
+        #change what is stored in the board at newPos to "gp" 
+        #orgBoard[old][position] = board[old][position] grabbing the text stored in the orgBoard position and changing it to the board
+              
+            if currentTurn == 0:
+                
+                #checking to see if green piece in position 
+                if "gp" == board[pieceRow][pieceCol]:
+                    
+                    gIndex = greenPath.index([pieceRow, pieceCol])
+                    
+                    newGreenPos = gIndex + diceValue
+                    
+                    newCoord = greenPath[newGreenPos]
+                    
+                    print(newCoord)
+                    
+                    board[newCoord] = "gp"
+                    
+                    orgBoard[pieceRow][pieceCol] = board[pieceRow][pieceCol]
+                    
+          
+                
+            elif currentTurn == 1:
+                pass
+                
+                
+            elif currentTurn == 2:
+                pass
+                
+                
+                
+                
+            elif currentTurn == 3:
+                pass
+                
+            
+          
+            endGame(gameOver)
+            
     
     
     
@@ -405,13 +445,11 @@ def main():                                             #every program should ha
               
                
                 if( event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 ):
-                    pieceRow, pieceCol = getClickRowColumn(pygame.mouse.get_pos())    
+                    pieceRow, pieceCol = getClickRowColumn(pygame.mouse.get_pos())   
+                    movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, gameOver)
                     
-                    if gameBoard == True:
-                        
                     
-                        currentTurn = movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, gameOver) 
-                        
+                   
                     gameBoard = True
                                
                     
@@ -426,6 +464,8 @@ def main():                                             #every program should ha
                         
                         #so it works only when mouse collides with dice and NOT the gameboard 
                         diceValue = random.randint(5,6)
+                        
+                        currentTurn = movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, gameOver) 
                         
                         
     
