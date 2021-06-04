@@ -283,6 +283,7 @@ gets the dice value from rollDice and moves the piece
 -player can only move if 6 is rolled 
 '''    
 def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, gameOver):
+    
     #first play...pieces are still home 
     if [pieceRow,pieceCol] in homePositions:
         firstTime = True
@@ -342,28 +343,75 @@ def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, 
                     
                     newGreenPos = gIndex + diceValue
                     
-                    newCoord = greenPath[newGreenPos]
+                    coordx = greenPath[newGreenPos][0]
+                    coordy = greenPath[newGreenPos][1]
                     
-                    print(newCoord)
+                    print(coordx, coordy)
                     
-                    board[newCoord] = "gp"
+                    
+                    board[coordx][coordy] = "gp"
                     
                     orgBoard[pieceRow][pieceCol] = board[pieceRow][pieceCol]
                     
           
                 
             elif currentTurn == 1:
-                pass
+                
+                 #checking to see if yellow piece in position 
+                if "yp" == board[pieceRow][pieceCol]:
+                    
+                    yIndex = yellowPath.index([pieceRow, pieceCol])
+                    
+                    newYellowPos = yIndex + diceValue
+                    
+                    coordx = yellowPath[newYellowPos][0]
+                    coordy = yellowPath[newYellowPos][1]
+                    
+                    print(coordx, coordy)
+               
+                    board[coordx][coordy] = "yp"
+                    
+                    orgBoard[pieceRow][pieceCol] = board[pieceRow][pieceCol]
+                    
                 
                 
             elif currentTurn == 2:
-                pass
-                
-                
-                
-                
+                 #checking to see if blue piece in position 
+                if "bp" == board[pieceRow][pieceCol]:
+                    
+                    bIndex = bluePath.index([pieceRow, pieceCol])
+                    
+                    newBluePos = bIndex + diceValue
+                    
+                    coordx = bluePath[newBluePos][0]
+                    coordy = bluePath[newBluePos][1]
+                    
+                    print(coordx, coordy)
+                    
+                    
+                    board[coordx][coordy] = "bp"
+                    
+                    orgBoard[pieceRow][pieceCol] = board[pieceRow][pieceCol]
+                  
+                  
             elif currentTurn == 3:
-                pass
+                 #checking to see if red piece in position 
+                if "rp" == board[pieceRow][pieceCol]:
+                    
+                    rIndex = redPath.index([pieceRow, pieceCol])
+                    
+                    newRedPos = rIndex + diceValue
+                    
+                    coordx = redPath[newRedPos][0]
+                    coordy = redPath[newRedPos][1]
+                    
+                    print(coordx, coordy)
+                    
+                    
+                    board[coordx][coordy] = "rp"
+                    
+                    orgBoard[pieceRow][pieceCol] = board[pieceRow][pieceCol]
+                    
                 
             
           
@@ -452,9 +500,7 @@ def main():                                             #every program should ha
                    
                     gameBoard = True
                                
-                    
-                        
-                    
+                
                 
                 #dice 
                 if diceRect.collidepoint(pygame.mouse.get_pos()):
