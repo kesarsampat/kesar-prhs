@@ -137,7 +137,7 @@ players =["GREEN","YELLOW","BLUE", "RED",]
 diceRect = pygame.Rect(0,h-90, 78,78)
 
 
-#clock = pygame.time.Clock()                            # Manage timing for screen updates
+clock = pygame.time.Clock()                            # Manage timing for screen updates
                                                         # Uncomment when timing/animation is needed
 
 
@@ -148,7 +148,7 @@ the beginning screen before playing with the title and 'click to play'
 -uses mouse clicks 
 '''
 
-def startScreen(gameInPlay, pickPlayer, diceValue,board,currentTurn):
+def startScreen(gameInPlay, pickPlayer, diceValue,board,currentTurn, gameOver):
     for wall in borders:
         pygame.draw.rect(surface, GREY, wall)
    
@@ -164,7 +164,7 @@ def startScreen(gameInPlay, pickPlayer, diceValue,board,currentTurn):
         
         surface.fill(WHITE)
         gameInPlay == True
-        drawScreen(diceValue,board,currentTurn)
+        drawScreen(diceValue,board,currentTurn, gameOver)
 
     return gameInPlay
         
@@ -216,7 +216,7 @@ def showMessage(words, size, font, x, y, color, bg = None):
 displays all elements on the screen:
 -background, borders, startMessage, dice implementations, currentTurn, 
 '''
-def drawScreen(diceValue,board,currentTurn):
+def drawScreen(diceValue,board,currentTurn, gameOver):
     #background
     background = pygame.image.load('background.jpg')
     surface.blit(background, [45,26])
@@ -236,25 +236,32 @@ def drawScreen(diceValue,board,currentTurn):
         x =45
         for square in row:
             if square=="gp":
-                pygame.draw.ellipse(surface,GREY,[x,y,sw,sw],0)
+                pygame.draw.ellipse(surface,GREEN,[x,y,sw,sw],0)
             if square=="yp":
-                pygame.draw.ellipse(surface,GREY,[x,y,sw,sw],0)
+                pygame.draw.ellipse(surface,YELLOW,[x,y,sw,sw],0)
             if square=="rp":
-                pygame.draw.ellipse(surface,GREY,[x,y,sw,sw],0)
+                pygame.draw.ellipse(surface,RED,[x,y,sw,sw],0)
             if square=="bp":
-                pygame.draw.ellipse(surface,GREY,[x,y,sw,sw],0)
+                pygame.draw.ellipse(surface,BLUE,[x,y,sw,sw],0)
             x+=sw
         y+=sw
     
-    #if diceValue == 6:
-        #showMessage("Roll Again!", 20, "Consolas", w-70, h-30, RED)
-        
+    #game over
+    if gameOver == True:
+        if len(gEnd) == 4:
+            showMessage("GREEN WON!", 50, "Consolas", w/2, h/2, GREEN)
+        if len(yEnd) == 4:
+            showMessage("YELLOW WON!", 50, "Consolas", w/2, h/2, YELLOW)
+        if len(bEnd) == 4:
+            showMessage("BLUE WON", 50, "Consolas", w/2, h/2, BLUE)
+        if len(rEnd) == 4:
+            showMessage("RED WON", 50, "Consolas", w/2, h/2, RED)                                  
+          
     blitDice(diceValue) 
-    #currentTurn+=1
     
     currentTurnMessage = players[currentTurn]+"\'s Turn"
     showMessage(currentTurnMessage, 40, "Consolas", w/2, h-45, DKGREY)
-    showMessage(currentTurnMessage, 40, "Consolas", (w/2)-5, h-43,GREEN )   #casts a shadow effect     
+    showMessage(currentTurnMessage, 40, "Consolas", (w/2)-5, h-43,DKGREY )   #casts a shadow effect     
 
 '''
 returns the row and column of where you have clicked on the grid, negative values indicate that the player did not click on the board
@@ -351,9 +358,21 @@ def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, 
                     
                     board[coordx][coordy] = "gp"
                     
-                    orgBoard[pieceRow][pieceCol] = board[pieceRow][pieceCol]
+                    if [coordx,coordy] == greenPath[0]:
+                        
+                        board[pieceRow][pieceCol] = "g"
                     
-          
+                        
+                    else:
+                        board[pieceRow][pieceCol] = "w"
+                        
+                    if [coordx, coordy] == greenPath[-1]:
+                        gEnd.append(True) 
+                        
+                        if len(gEnd) == 4:
+                            gameOver = True 
+                        
+            
                 
             elif currentTurn == 1:
                 
@@ -371,9 +390,23 @@ def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, 
                
                     board[coordx][coordy] = "yp"
                     
-                    orgBoard[pieceRow][pieceCol] = board[pieceRow][pieceCol]
                     
+                    
+                    if [coordx,coordy] == yellowPath[0]:
+                        
+                        board[pieceRow][pieceCol] = "y"
+                    
+                        
+                    else:
+                        board[pieceRow][pieceCol] = "w"
                 
+                    if [coordx, coordy] == yellowPath[-1]:
+                        yEnd.append(True) 
+                        
+                        if len(yEnd) == 4:
+                            gameOver = True                 
+                
+                    
                 
             elif currentTurn == 2:
                  #checking to see if blue piece in position 
@@ -391,7 +424,20 @@ def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, 
                     
                     board[coordx][coordy] = "bp"
                     
-                    orgBoard[pieceRow][pieceCol] = board[pieceRow][pieceCol]
+                    if [coordx,coordy] == bluePath[0]:
+                        
+                        board[pieceRow][pieceCol] = "b"
+                    
+                        
+                    else:
+                        board[pieceRow][pieceCol] = "w"
+                        
+                    if [coordx, coordy] == bluePath[-1]:
+                        bEnd.append(True) 
+                        
+                        if len(bEnd) == 4:
+                            gameOver = True                         
+         
                   
                   
             elif currentTurn == 3:
@@ -410,14 +456,19 @@ def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, 
                     
                     board[coordx][coordy] = "rp"
                     
-                    orgBoard[pieceRow][pieceCol] = board[pieceRow][pieceCol]
+                    if [coordx,coordy] == redPath[0]:
+                        
+                        board[pieceRow][pieceCol] = "r"
                     
-                
-            
-          
-            endGame(gameOver)
-            
-    
+                        
+                    else:
+                        board[pieceRow][pieceCol] = "w"
+                            
+                    if [coordx, coordy] == redPath[-1]:
+                        rEnd.append(True) 
+                        
+                        if len(rEnd) == 4:
+                            gameOver = True                 
     
     
     currentTurn+=1  #index for whose turn it is
@@ -426,22 +477,10 @@ def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, 
     currentPlayer=players[currentTurn]        
    
     currentTurnMessage = players[currentTurn]+"\'s Turn"
-    
-    #print(currentTurnMessage)
-          
+              
        
-    return currentTurn      
+    return currentTurn
         
-    
-'''
--uses the endList for each color and sees if the len = 4 
--everytime a new piece goes into the hom, that location will append into the endList and check if the len = 4 
--if len = 4, gameOver = True
-
-
-'''  
-def endGame(gameOver):
-    return 42
     
                 
 orgBoard=makeBoard()  #when you move pieces off of one space onto another, you will need to restore the space to the color that was there before you put a piece on it.  Use this board to do that.   Global access, you should not change this board
@@ -494,11 +533,16 @@ def main():                                             #every program should ha
                
                 if( event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 ):
                     pieceRow, pieceCol = getClickRowColumn(pygame.mouse.get_pos())   
-                    movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, gameOver)
+                    
+                    if (pieceRow, pieceCol) == (15, 0):
+                        
+                        pass
+                    else:
+                        movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, gameOver)
                     
                     
                    
-                    gameBoard = True
+                        gameBoard = True
                                
                 
                 
@@ -511,9 +555,13 @@ def main():                                             #every program should ha
                         #so it works only when mouse collides with dice and NOT the gameboard 
                         diceValue = random.randint(5,6)
                         
+                        
+                        
                         currentTurn = movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, gameOver) 
                         
-                        
+                #reset
+                if gameOver == True:
+                    board = orgBoard
     
         
         # ongoing game logic that occurs ever 1/60 second goes @ this indentation level
@@ -522,11 +570,11 @@ def main():                                             #every program should ha
         
         
         surface.fill(WHITE)  #set background color
-        startScreen(gameInPlay,gameBoard, diceValue,board,currentTurn)
+        startScreen(gameInPlay,gameBoard, diceValue,board,currentTurn, gameOver)
         
         
         
-        #clock.tick(60)                                  #Change FPS - frames per sec- when animating
+        clock.tick(60)                                  #Change FPS - frames per sec- when animating
         pygame.display.update()                          #updates the screen- usually in main
         
         
