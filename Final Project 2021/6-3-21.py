@@ -113,6 +113,15 @@ ypHomePositions = [ [2,11], [2,12], [3,11], [3,12] ]
 bpHomePositions = [ [11,11], [11,12], [12,11], [12,12] ]
 rpHomePositions = [ [11,2], [11,3], [12,2], [12,3] ]
 
+homePositions = gpHomePositions + ypHomePositions + bpHomePositions + rpHomePositions
+
+#end positions 
+gEnd = []
+yEnd = []
+bEnd = []
+rEnd = []
+
+
 
 
 '''
@@ -144,8 +153,13 @@ def startScreen(gameInPlay, pickPlayer, diceValue,board,currentTurn):
         pygame.draw.rect(surface, GREY, wall)
    
     showMessage("LUDO!", 120, "Consolas", w/2-10, h/2-10, GREY)
-    showMessage("Click To Play", 30, "Consolas", w/2-15, h/2+60, WHITE, GREY)    
+    showMessage("Click To Play", 30, "Consolas", w/2-15, h/2+60, WHITE, GREY)  
     
+    showMessage("-try to roll a 6 to get out and pick which player to move", 15, "Consolas", w/2-15, h/2+120, DKGREY)
+    showMessage("-click player to move throughout to get to home ", 15, "Consolas", w/2-15, h/2+150, DKGREY)
+    showMessage("-goal is to be the first one in your home ", 15, "Consolas", w/2-15, h/2+180, DKGREY)
+    
+
     if pickPlayer == True:
         
         surface.fill(WHITE)
@@ -213,7 +227,8 @@ def drawScreen(diceValue,board,currentTurn):
     
     #dice start message
  
-    showMessage("Click dice to start.", 15, "Consolas", w/2, h-20, BLACK)
+    showMessage("Click dice to start.", 15, "Consolas", w-400, h-20, BLACK)
+    showMessage("Roll 6 to get out!", 15, "Consolas", w-200, h-20, BLACK)
     
     #draws the player circles from the model
     y=26
@@ -221,13 +236,13 @@ def drawScreen(diceValue,board,currentTurn):
         x =45
         for square in row:
             if square=="gp":
-                pygame.draw.ellipse(surface,GREEN,[x,y,sw,sw],0)
+                pygame.draw.ellipse(surface,GREY,[x,y,sw,sw],0)
             if square=="yp":
-                pygame.draw.ellipse(surface,YELLOW,[x,y,sw,sw],0)
+                pygame.draw.ellipse(surface,GREY,[x,y,sw,sw],0)
             if square=="rp":
-                pygame.draw.ellipse(surface,RED,[x,y,sw,sw],0)
+                pygame.draw.ellipse(surface,GREY,[x,y,sw,sw],0)
             if square=="bp":
-                pygame.draw.ellipse(surface,BLUE,[x,y,sw,sw],0)
+                pygame.draw.ellipse(surface,GREY,[x,y,sw,sw],0)
             x+=sw
         y+=sw
     
@@ -267,45 +282,79 @@ gets the dice value from rollDice and moves the piece
 -when mouse is clicked on player, it directly goes to the first colored space out 
 -player can only move if 6 is rolled 
 '''    
-def movePiece(diceValue, currentTurn, board, currentPlayer):
+def movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, gameOver):
+    
+    
+    if diceValue == 6:
+        if [pieceRow,pieceCol] in homePositions:
+        
+            homePositions.remove([pieceRow, pieceCol])
+            #print(len(homePositions))
+            
+            
+            #have to do differently for each player/color
+            #if player clicked, first position ([6,1]) has gp instead of g
+            #don't need to reblit anything because it blits itself in drawScreen()
+            
+            #print(currentTurn)
+        
+            if currentTurn == 0:    #GREEN
+                
+                board[pieceRow][pieceCol] = "bg"
+                                
+                board[6][1] = "gp"
+                
+            elif currentTurn == 1:    #YELLOW
+                            
+                board[pieceRow][pieceCol] = "by"
+                                
+                board[1][8] = "yp"
+                
+            elif currentTurn == 2:    #BLUE
+                            
+                board[pieceRow][pieceCol] = "bb"
+                                
+                board[8][13] = "bp"
+                
+            elif currentTurn == 3:    #RED
+                                    
+                board[pieceRow][pieceCol] = "br"
+                                
+                board[13][6] = "rp"                                                
+                
+         
+    
+         
+    else:
+        #newPos =
+        endGame(gameOver)
+        pass
+    
+    
+    
+    currentTurn+=1  #index for whose turn it is
+    currentTurn = currentTurn%4
+    players =["GREEN", "YELLOW","BLUE", "RED"]
+    currentPlayer=players[currentTurn]        
    
+    currentTurnMessage = players[currentTurn]+"\'s Turn"
     
-    if diceValue != 6:   #move on to next player 
-        currentTurn+=1  #index for whose turn it is
-        currentTurn = currentTurn%4
-        players =["GREEN", "YELLOW","BLUE", "RED"]
-        currentPlayer=players[currentTurn]        
-       
-        currentTurnMessage = players[currentTurn]+"\'s Turn"
-        showMessage(currentTurnMessage, 40, "Consolas", w/2, h/2, DKGREY)
-        showMessage(currentTurnMessage, 40, "Consolas", (w/2), h/2,YELLOW )   #casts a shadow effect  
-        
-        #print(currentTurnMessage)
-  
-    
-    #first play to get out
-    elif diceValue == 6: 
-        #place a gp position at [6,1] and set old spot with green space 
-        
-        #"gp" = board[6][1]
-        
-        pygame.draw.ellipse(surface,GREEN,[45,26,sw,sw],0)
-        
-        
-        
-            
-            
-            #green start = 6 1
-            #yellow start = 6 12
-            #red start = 8 2 
-            #blue start = 12 8 
-
-   
-            
-    
-    return currentTurn        
-        
+    #print(currentTurnMessage)
           
+       
+    return currentTurn      
+        
+    
+'''
+-uses the endList for each color and sees if the len = 4 
+-everytime a new piece goes into the hom, that location will append into the endList and check if the len = 4 
+-if len = 4, gameOver = True
+
+
+'''  
+def endGame(gameOver):
+    return 42
+    
                 
 orgBoard=makeBoard()  #when you move pieces off of one space onto another, you will need to restore the space to the color that was there before you put a piece on it.  Use this board to do that.   Global access, you should not change this board
 
@@ -319,7 +368,8 @@ def main():                                             #every program should ha
     diceRoll = True #only goes when clicked 
     diceValue=1 
     gameBoard = False      #turns true only on the start screen when the mouse is clicked, otherwise is false
-    
+    gameOver = False    #ends the game when all 4 pieces are in the home
+      
                 
     
     #you can increase currentTurn by 1 everytime you switch players.  currentPlayer=players[currentTurn%4] 
@@ -331,7 +381,7 @@ def main():                                             #every program should ha
     
     
     board=makeBoard()    # this is the board you will use for placing players
-    
+        
 
         
             
@@ -351,22 +401,34 @@ def main():                                             #every program should ha
      
             if gameInPlay == True:      #switching from home screen to gamescreen
                 
+                
+              
+               
                 if( event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 ):
                     pieceRow, pieceCol = getClickRowColumn(pygame.mouse.get_pos())    
+                    
+                    if gameBoard == True:
+                        
+                    
+                        currentTurn = movePiece(diceValue, currentTurn, board, currentPlayer, pieceRow, pieceCol, gameOver) 
+                        
                     gameBoard = True
-              
- 
-                #stopping the dice 
+                               
+                    
+                        
+                    
+                
+                #dice 
                 if diceRect.collidepoint(pygame.mouse.get_pos()):
-                    if( event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 ):        
+                    if( event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 ):    
+                        
                         
                         
                         #so it works only when mouse collides with dice and NOT the gameboard 
-                        diceValue = random.randint(1,6)  
-                     
-                        currentTurn = movePiece(diceValue, currentTurn, board, currentPlayer)
+                        diceValue = random.randint(5,6)
                         
-                    
+                        
+    
         
         # ongoing game logic that occurs ever 1/60 second goes @ this indentation level
         
