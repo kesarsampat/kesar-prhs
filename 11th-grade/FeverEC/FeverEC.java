@@ -30,7 +30,13 @@ public class FeverEC {
 				if (headache.equals("YES"))
 					handleHeadache();
 				else {
-					System.out.println("no headache");
+					String vomit = ask("Do you have vomit or diahreea?");
+					
+					if (vomit.equals("YES"))
+						showPossibleDiagnosis("Possibilites include digestive tract infection.");
+					else {
+						handleJoints();
+					}
 					
 				}
 			}
@@ -65,26 +71,95 @@ public class FeverEC {
 	
 	public static void handleCough()
 	{
-		System.out.println("Coughing");
+		String shortOfBreath = ask("Are you short of breath or wheezing or coughing up phlegm?");
+		
+		if (shortOfBreath.equals("YES"))
+			showPossibleDiagnosis("Possibilites include pneumonia or infections of airways");
+			
+		else {
+			String hc = ask("Do you have a headahce?");
+			
+			if (hc.equals("YES"))
+				showPossibleDiagnosis("Possibilites include viral infection");
+			
+			else {
+				String bj = ask("Do you have aching bones or aching joints?");
+				
+				if (bj.equals("YES"))
+					handleJoints();
+				else {
+					String rash = ask("Do you have a rash?");
+					
+					if (rash.equals("YES"))
+						showPossibleDiagnosis("Insufficeint information to list possiblites");
+					else {
+						String st = ask("Do you have a sore throat?");
+						
+						if (st.equals("YES"))
+							showPossibleDiagnosis("Possibilites include throat infection.");
+						else {
+							String backAndChills = ask("Do you have back pain just above the waist and chills and fever?");
+							
+							if (backAndChills.equals("YES")) 
+								showPossibleDiagnosis("Possibilites include kidney infection.");
+							else {
+								String urinating = ask("Do you have pain urinating or are you urinating more often?");
+								
+								if (urinating.equals("YES"))
+									showPossibleDiagnosis("Possibilites include urinary tract infection.");
+								else {
+									String sun = ask("Have you spent the day in the sun or hot conditions?");
+									
+									if (sun.equals("YES"))
+										showPossibleDiagnosis("Possibilites include sunstroke or heat exhaustion.");
+									else {
+										showPossibleDiagnosis("Insufficeint information to list possiblites");
+
+										
+										
+									}
+
+								}
+									
+										
+								
+							}
+							
+						}
+						
+					}
+						
+					
+				}
+				
+				
+				
+			}
+			
+			
+		
+		}
+			
+				
 		
 	}
 	
 	public static void handleHeadache()
 	{
+		String pains = ask("Are you experiecning any of the following: pain when you are bending your head forward, nausea or vomiting, bright light hurting your eyes, drowsiness, or confusion?");
 		
-		
+		if (pains.equals("YES"))
+			showPossibleDiagnosis("Possibilites include meningitis.");
+		//no else statement 
+	
 	}
 	
 	public static void handleJoints()
 	{
-		
+		showPossibleDiagnosis("Possibilities include viral infection.");
 		
 	}
 	
-	
-	
-	
-	
-	
+
 
 }
