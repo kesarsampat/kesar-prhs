@@ -11,7 +11,7 @@ public class LingoServer {
 	
 	/**
 	 * Read in set of 5-letter words from a file & store them
-	 * @param fileName\
+	 * @param fileName
 	 */
 	public LingoServer(String fileName) {
 		
@@ -19,13 +19,10 @@ public class LingoServer {
 		 * default number at 1024 as the middle ground between small and big file 
 		 */
 		Lingo [] lingoArrayTemp = new Lingo[1024]; 
-		
-		
-		
+	
 		int i = 0; 
-			
-
-		//read a file 
+		
+		//read in a file 
 		try {
 			Scanner inFile = new Scanner(new File(fileName));
 			
@@ -56,12 +53,13 @@ public class LingoServer {
 	}
 	
 	/**
+	 * Doubles the size of the original array when length of old array fills up 
 	 * @param oldArray
-	 * @return
+	 * @return newArray - double the size 
 	 */
 	public Lingo [] doubleArray(Lingo [] oldArray)
 	{
-		
+		//new length of array 
 		int newLength = (oldArray.length) *2; //double it 
 		
 		//declare new array 
@@ -75,8 +73,8 @@ public class LingoServer {
 	}
 	
 	/**
-	 * Return true if any Lingo objects remain; false otherwise 
-	 * @return
+	 * Checks to see if array has lingo objects still  
+	 * @return true if any Lingo objects remain; false otherwise 
 	 */
 	public boolean hasLingo() {
 		
@@ -94,8 +92,8 @@ public class LingoServer {
 	}
 	
 	/**
-	 * Return a random Lingo object from the array (with elimination) 
-	 * @return
+	 * Obtain a lingo object (word) from array and store 
+	 * @return random Lingo object from the array (with elimination) 
 	 */
 	public Lingo getLingo() {
 		
@@ -130,7 +128,7 @@ public class LingoServer {
 	 */
 	public String toString() {
 		String s = null;  
-		s = "Number of words: " + numWords + " " + "Capacity: " + lingoArray.length; 
+		s = "\nNumber of words: " + numWords + "\n" + "Capacity: " + lingoArray.length + "\n"; 
 		
 		return s; 
 		

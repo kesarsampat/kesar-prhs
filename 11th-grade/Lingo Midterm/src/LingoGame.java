@@ -2,31 +2,27 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 //client program
-/*TO DO 
- * test program with bb thing 
- * have user choose file 
- */
 public class LingoGame {
 	
 	public static void main (String [] args) {
 		
 		//command line argument
 		
-		String wordsFile = "small5.txt"; // by default 
+		String wordsFile = "small5.txt"; // by default if nothing else entered in run config
 				
 		if (args.length >= 1) 
 		{
 			wordsFile = args[0];
 		}
-		
-		
+	
 		int numTries = 0; 
-			
 		
 		LingoServer lServer = new LingoServer(wordsFile); 
 				
-		
+		//starting output in console 
 		System.out.println("Welcome to Lingo!"); 
+		
+		System.out.println("\nThis is a word guessing game. Each word is 5 letters long. You have 5 tries to guess the word correctly. \nType 'QUIT' to stop the game at any time." );
 		
 		System.out.println(lServer.toString()); 
 		
@@ -36,22 +32,20 @@ public class LingoGame {
 		boolean playAgain = true; 
 		
 	
-		while (lServer.hasLingo())
+		while (lServer.hasLingo()) //while there are still objects in lingo array 
 		{  
 			Lingo lWord = lServer.getLingo(); //getting word 
-			System.out.println("The word starts with " + lWord.first()); 
+			System.out.println("Guess the word! It starts with " + lWord.first()); 
 			
-			boolean goodGuess = true; 
+			boolean goodGuess = true; //if guess is correct or not based off of 2s in the array 
 
 			for (numTries = 0; numTries < 5; numTries++)
 			{
 			
-				System.out.println("Guess the word (type 'QUIT' to stop game): ");
+				System.out.println("Your guess # " + (numTries+1) + ": ");
 				
 				String userGuess = input.nextLine();
-				
-				
-								
+							
 				if (userGuess.equals("QUIT") || userGuess.equals("quit") )
 				{
 					playAgain = false; 
@@ -70,8 +64,7 @@ public class LingoGame {
 						break;
 						
 					}
-					
-					
+		
 				}
 				
 				if (goodGuess == true)
@@ -80,7 +73,7 @@ public class LingoGame {
 					break; 
 				}
 				
-				goodGuess = true;
+				goodGuess = true; //word is 100% correct 
 				
 				
 			}
@@ -96,8 +89,7 @@ public class LingoGame {
 				break;
 			}
 			
-			System.out.println(lServer.toString()); 
-			//System.out.println(Arrays.toString(lWord.guessWord(userGuess)));
+			System.out.println(lServer.toString()); //printing out word after guessing
 		
 		}
 	

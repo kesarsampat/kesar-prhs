@@ -2,7 +2,8 @@ import java.util.Arrays;
 
 /**
  * @author Kesar Sampat 
- *
+ * APCSA PD. 6
+ * Lingo Midterm Game - guessing game using classes and other ideas
  */
 public class Lingo {
 	private String word; 
@@ -13,8 +14,7 @@ public class Lingo {
 	 */
 	public Lingo(String word) {
 		this.word = word; 
-		
-		
+	
 	}
 	
 	/**
@@ -27,11 +27,15 @@ public class Lingo {
 		first = word.charAt(0);
 		
 		return first;
-		
-		
+
 	}
 	
 	
+	/**
+	 * Stores values in an array based off of user guess accuracy. 
+	 * @param guess - user input guess of word 
+	 * @return
+	 */
 	public int [] guessWord(String guess) 
 	{
 		//array - one location corresponding to each location in the Lingo word 
@@ -153,9 +157,7 @@ public class Lingo {
 	
 		
 		return s; 
-		
-		
+	
 	}
-	 
 
 }
