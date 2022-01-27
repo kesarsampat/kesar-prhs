@@ -1,0 +1,14 @@
+//inventory list
+//name, desc, number in stock, price 
+Skin Fridge, Holds all refrigeratoed skin care products, 10, 25.99
+Moisturizer, Moisturizes dry skin and refreshes, 15, 12.99
+Face Wash, Cleanses skin, 5, 12.99
+Face Mask, Refreshes skin and gets rid of bacteria, 10, 5.99
+Essential Oils, Makes things smell good and healthy for you, 10, 2.99
+Mascara, Voluminizes and lengthens eyelashes, 10, 6.99 
+Hairbrush, Combs through hair knots, 10, 15.00
+Headband, Holds hair back from face, 2, 1.99
+Vanity, Storage and counter space to hold essential items, 20, 200.00
+Perfume, Enhances body smell, 15, 20.00
+Hair Ties, Ties hair back from face, 50, 0.99
+Jade Roller, Smooths out face and massages, 10, 12.99
